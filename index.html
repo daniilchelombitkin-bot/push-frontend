@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Push Demo Minimal</title>
+  <!-- SDK v16 -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+</head>
+<body>
+  <h1>🔥 Минимальная проверка OneSignal</h1>
+  <p id="status">Инициализация...</p>
+
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      try {
+        await OneSignal.init({
+          appId: "cdfe9049-9f7e-4221-8c48-72a9756e6bce",
+          serviceWorkerPath: "/OneSignalSDKWorker.js",
+          serviceWorkerUpdaterPath: "/OneSignalSDKUpdaterWorker.js",
+          serviceWorkerParam: { scope: "/" }
+        });
+
+        console.log("✅ OneSignal инициализирован");
+
+        const statusEl = document.getElementById("status");
+
+        // проверяем статус
+        const isOptedIn = await OneSignal.User.PushSubscription.optedIn;
+        statusEl.textContent = isOptedIn ? "Подписан ✅" : "Не подписан ❌";
+
+        // получаем playerId
+        const playerId = await OneSignal.User.PushSubscription.id;
+        console.log("🎯 PlayerId:", playerId);
+      } catch (err) {
+        console.error("Ошибка инициализации:", err);
+      }
+    });
+  </script>
+</body>
+</html>
